@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Can You Discover The Pattern?</title>
+    <style>
+        #ball {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: green;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        #buttonContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #ticker {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #question {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #statement {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .color-box {
+            width: 100px;
+            height: 30px;
+            margin: 10px;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+            border: 2px solid black;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Can You Discover The Pattern?</h1>
+
+    <div id="ball"></div>
+
+    <div id="buttonContainer">
+        <button id="restartButton">Restart</button>
+    </div>
+
+    <div id="ticker">Clicks: 0</div>
+
+    <div id="question">What color will the circle be on the 20th click?</div>
+
+    <div id="statement">Each color has its own rule, and each rule is applied on its own.</div>
+
+    <div id="statement">Green is the default color, and there is no rule applied to Green.</div>
+
+    <script>
+        var clickCount = 0;
+        var ball = document.getElementById('ball');
+        var restartButton = document.getElementById('restartButton');
+        var ticker = document.getElementById('ticker');
+        var question = document.getElementById('question');
+        var statement = document.getElementById('statement');
+        var colorBoxes = document.createElement('div');
+
+        colorBoxes.id = 'colorBoxes';
+        colorBoxes.style.display = 'none';
+
+        var colors = ['Green', 'Blue', 'Yellow', 'Red'];
+
+        colors.forEach(function(color) {
+            var box = document.createElement('div');
+            box.classList.add('color-box');
+            box.textContent = color;
+            colorBoxes.appendChild(box);
+        });
+
+        document.body.appendChild(colorBoxes);
+
+        var answerSelected = false;
+
+        function handleClick() {
+            clickCount++;
+            ticker.textContent = "Clicks: " + clickCount;
+            if (clickCount === 19) {
+                ball.style.backgroundColor = 'green';
+                ball.removeEventListener('click', handleClick);
+                question.textContent = "You reached the maximum number of clicks.";
+                colorBoxes.style.display = 'block';
+                statement.textContent = "Select the correct color:";
+            } else if (clickCount % 9 === 0) {
+                ball.style.backgroundColor = 'blue';
+            } else if (clickCount % 4 === 0) {
+                ball.style.backgroundColor = 'yellow';
+            } else if (clickCount % 7 === 0) {
+                ball.style.backgroundColor = 'red';
+            } else {
+                ball.style.backgroundColor = 'green';
+            }
+        }
+
+        function handleRestart() {
+            clickCount = 0;
+            ticker
+            .textContent = "Clicks: " + clickCount;
+            ball.style.backgroundColor = 'green';
+            ball.addEventListener('click', handleClick);
+            question.textContent = "What color will the circle be on the 20th click?";
+            colorBoxes.style.display = 'none';
+            statement.textContent = "Each color has its own rule, and they are all distinct rules.";
+            answerSelected = false;
+        }
+
+        function handleColorBoxClick(event) {
+            if (answerSelected) {
+                return; // Exit if answer is already selected
+            }
+
+            var selectedColor = event.target.textContent;
+            if (selectedColor === "Yellow") {
+                alert("Correct!");
+            } else {
+                alert("Try Again!");
+            }
+            answerSelected = true;
+        }
+
+        ball.addEventListener('click', handleClick);
+        restartButton.addEventListener('click', handleRestart);
+        colorBoxes.addEventListener('click', handleColorBoxClick);
+    </script>
+</body>
+</html>
